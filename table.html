@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Async API POST with Table</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to bottom right, #f5f7fa, #c3cfe2);
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      table {
+        width: 100%;
+        max-width: 900px;
+        border-collapse: collapse;
+        background-color: #c5e6e3;
+        margin-top: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid black; /* Changed border color to black */
+      }
+
+      th,
+      td {
+        padding: 10px 15px;
+        text-align: left;
+        color: #555;
+      }
+
+      th {
+        background-color: #f4f4f4;
+        color: #333;
+      }
+
+      tbody tr:hover {
+        background-color: #f9f9f9;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .table-container {
+        width: 100%;
+        max-width: 900px;
+        overflow-x: auto;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Data Representation</h1>
+
+    <button onclick="myfun()">Get Data</button>
+
+    <div class="table-container">
+      <table id="posts-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Body</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data rows will be inserted here -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      const url = "https://jsonplaceholder.typicode.com/posts";
+
+      // Async function to fetch data from the API and display it in a table format
+      async function myfun() {
+        try {
+          // Fetch data from the API
+          const res = await fetch(url);
+
+          if (!res.ok) {
+            throw new Error(`Failed to fetch data: ${res.statusText}`);
+          }
+
+          const posts = await res.json();
+
+          // Get the table body element
+          const tableBody = document.querySelector("#posts-table tbody");
+
+          // Clear any existing rows
+          tableBody.innerHTML = "";
+
+          // Iterate over the fetched posts and create rows for the table
+          posts.forEach((post) => {
+            // Create a new row
+            const row = document.createElement("tr");
+
+            // Create table cells for ID, Title, and Body
+            const idCell = document.createElement("td");
+            idCell.textContent = post.id;
+
+            const titleCell = document.createElement("td");
+            titleCell.textContent = post.title;
+
+            const bodyCell = document.createElement("td");
+            bodyCell.textContent = post.body;
+
+            // Append the cells to the row
+            row.appendChild(idCell);
+            row.appendChild(titleCell);
+            row.appendChild(bodyCell);
+
+            // Append the row to the table body
+            tableBody.appendChild(row);
+          });
+        } catch (error) {
+          console.error("Error fetching data:", error.message);
+          alert("Failed to fetch data. Please try again.");
+        }
+      }
+    </script>
+  </body>
+</html>
